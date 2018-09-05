@@ -18,5 +18,7 @@ int main(int argc, char** argv)
 
 	using Module2::getMyName;
 	std::cout << getMyName() << "\n"; // (D)
+	int a;
+	std::cin >> a;  //some changes to second question in task 0a
 	return 0;
 }

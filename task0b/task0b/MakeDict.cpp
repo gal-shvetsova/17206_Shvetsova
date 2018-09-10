@@ -16,7 +16,7 @@ bool Is_Separator(char sym)
 	return true;
 }
 
-void WordCounter::addwords(string to_read)
+void WordCounter::addwords(string& to_read)
 {
 	int j = 0;
 	for (int i = 0; i < to_read.length(); i++)     
@@ -36,22 +36,28 @@ void WordCounter::addwords(string to_read)
 	}
 }
 
-void WordCounter::readfile(string in_name)
+bool WordCounter::readfile(string& in_name)
 {
 	ifstream fin;
 	fin.open(in_name);
+	if (!fin)
+		return false;
 	string temp;
 	while (std::getline(fin, temp, '\n'))
 		addwords(temp); 
 	fin.close();
+	return true;
 }
 
-void WordCounter::writeCSV(string out_name) 
+bool WordCounter::writeCSV(string& out_name) 
 {
 	ofstream fout;
 	fout.open(out_name);
+	if (!fout)
+		return false;
 	map <string, int>::iterator cur;
 	for (cur = dict.begin(); cur != dict.end(); cur++)
 		fout << cur->first << "," << cur->second << "," << int(float(cur->second) / total_size * 100) << "\n";
 	fout.close();
+	return true;
 }

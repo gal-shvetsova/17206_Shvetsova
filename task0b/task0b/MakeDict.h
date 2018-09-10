@@ -14,10 +14,10 @@ class WordCounter
 private:
 	int total_size = 0;
 	map<string, int> dict;
+	void addwords(string&);
 public:
-	void readfile(string);
-	void writeCSV(string) ;
-	void addwords(string);
+	bool readfile(string&);
+	bool writeCSV(string&) ;
 };
 
 #endif

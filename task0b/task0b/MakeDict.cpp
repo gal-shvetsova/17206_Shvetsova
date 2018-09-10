@@ -1,4 +1,9 @@
 #include "MakeDict.h"
+#include <fstream>
+#include <iostream>
+
+using std::ifstream;
+using std::ofstream;
 
 bool Is_Separator(char sym)
 {
@@ -11,23 +16,42 @@ bool Is_Separator(char sym)
 	return true;
 }
 
-map<string, int> Add_Words(string tmp, map<string, int> dict, int& count)
+void WordCounter::addwords(string to_read)
 {
 	int j = 0;
-	for (int i = 0; i < tmp.length(); i++)     
+	for (int i = 0; i < to_read.length(); i++)     
 	{
-		if (Is_Separator(tmp[i]))
+		if (Is_Separator(to_read[i]))
 		{
-			dict[tmp.substr(j, i - j)]++;
+			dict[to_read.substr(j, i - j)]++;
 			j = i + 1;
-			count++;
+			total_size++;
 		}
 
 	}
-	if (j < tmp.length())
+	if (j < to_read.length())
 	{
-		dict[tmp.substr(j, tmp.length() - j)]++;
-		count++;
+		dict[to_read.substr(j, to_read.length() - j)]++;
+		total_size++;
 	}
-	return dict;
+}
+
+void WordCounter::readfile(string in_name)
+{
+	ifstream fin;
+	fin.open(in_name);
+	string temp;
+	while (std::getline(fin, temp, '\n'))
+		addwords(temp); 
+	fin.close();
+}
+
+void WordCounter::writeCSV(string out_name) 
+{
+	ofstream fout;
+	fout.open(out_name);
+	map <string, int>::iterator cur;
+	for (cur = dict.begin(); cur != dict.end(); cur++)
+		fout << cur->first << "," << cur->second << "," << int(float(cur->second) / total_size * 100) << "\n";
+	fout.close();
 }

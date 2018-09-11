@@ -15,6 +15,7 @@ private:
 	int total_size = 0;
 	map<string, int> dict;
 	void addwords(string&);
+	map<int, string> sort();
 public:
 	bool readfile(string&);
 	bool writeCSV(string&) ;

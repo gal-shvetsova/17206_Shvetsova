@@ -51,13 +51,31 @@ bool WordCounter::readfile(string& in_name)
 
 bool WordCounter::writeCSV(string& out_name) 
 {
+	map <int, string> mp = sort();
 	ofstream fout;
 	fout.open(out_name);
 	if (!fout)
 		return false;
-	map <string, int>::iterator cur;
-	for (cur = dict.begin(); cur != dict.end(); cur++)
-		fout << cur->first << "," << cur->second << "," << int(float(cur->second) / total_size * 100) << "\n";
+	map <int, string>::iterator cur = mp.end();
+	cur--;
+	for (; cur != mp.begin(); cur--)
+		fout << cur->second << "," << cur->first << "," << int(float(cur->first) / total_size * 100) << "\n";
+	fout << cur->second << "," << cur->first << "," << int(float(cur->first) / total_size * 100) << "\n";
 	fout.close();
 	return true;
+}
+
+map<int, string> WordCounter::sort() 
+{
+	map<int, string> mp;
+	string temp_s;
+	int temp_i;
+	map <string, int>::iterator cur;
+	for (cur = dict.begin(); cur != dict.end(); cur++)
+	{
+		temp_s = cur->first;
+		temp_i = cur->second;
+		mp[temp_i] = temp_s;
+	}
+	return mp;
 }

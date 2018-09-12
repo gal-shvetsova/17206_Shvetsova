@@ -51,12 +51,13 @@ bool WordCounter::readfile(string& in_name)
 
 bool WordCounter::writeCSV(string& out_name) 
 {
-	map <int, string> mp = sort();
+	std::multimap <int, string> mp;
+	sort(mp);
 	ofstream fout;
 	fout.open(out_name);
 	if (!fout)
 		return false;
-	map <int, string>::iterator cur = mp.end();
+	std::multimap <int, string>::iterator cur = mp.end();
 	cur--;
 	for (; cur != mp.begin(); cur--)
 		fout << cur->second << "," << cur->first << "," << int(float(cur->first) / total_size * 100) << "\n";
@@ -65,17 +66,9 @@ bool WordCounter::writeCSV(string& out_name)
 	return true;
 }
 
-map<int, string> WordCounter::sort() 
+void WordCounter::sort(std::multimap<int, string>& mp) 
 {
-	map<int, string> mp;
-	string temp_s;
-	int temp_i;
-	map <string, int>::iterator cur;
+	std::multimap <string, int>::iterator cur;
 	for (cur = dict.begin(); cur != dict.end(); cur++)
-	{
-		temp_s = cur->first;
-		temp_i = cur->second;
-		mp[temp_i] = temp_s;
-	}
-	return mp;
+		mp.insert(std::pair<int, string>(cur->second, cur->first));
 }

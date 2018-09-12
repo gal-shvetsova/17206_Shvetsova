@@ -15,7 +15,7 @@ private:
 	int total_size = 0;
 	map<string, int> dict;
 	void addwords(string&);
-	map<int, string> sort();
+	void WordCounter::sort(std::multimap<int, string>& mp);
 public:
 	bool readfile(string&);
 	bool writeCSV(string&) ;

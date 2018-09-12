@@ -57,11 +57,9 @@ bool WordCounter::writeCSV(string& out_name)
 	fout.open(out_name);
 	if (!fout)
 		return false;
-	std::multimap <int, string>::iterator cur = mp.end();
-	cur--;
-	for (; cur != mp.begin(); cur--)
+	std::multimap <int, string>::reverse_iterator cur = mp.rend();
+	for (; cur != mp.rbegin(); cur++)
 		fout << cur->second << "," << cur->first << "," << int(float(cur->first) / total_size * 100) << "\n";
-	fout << cur->second << "," << cur->first << "," << int(float(cur->first) / total_size * 100) << "\n";
 	fout.close();
 	return true;
 }

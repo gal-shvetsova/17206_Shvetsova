@@ -20,7 +20,11 @@ TritSet::TritSet(uint size)
 	totalsize = size;
 }
 
-trit TritSet::operator[](int index) const
+TritSet::Reference TritSet::operator[](const int& index) const
 {
-
+	size_t array_index = index % (BITS_FOR_UINT / BITS_FOR_TRIT),  //index in number 
+		int_index = (index * BITS_FOR_TRIT / BITS_FOR_UINT); // index in array of int
+	Reference ref(this, array_index, int_index);
+	return ref;
 }
+

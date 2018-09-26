@@ -1,28 +1,29 @@
 #ifndef TRIT_H
 #define TRIT_H
+#include "Other.h"
 
-#include "stdint.h"
-enum trit {Unknown = 0, True, False};
+
 
 class Trit
 {
 public:
-	trit get(int) const;
+	trit get(int, Trit) const;
 	trit define(int, int) const;
+	Trit& delete_t(int);
+	int operator=(trit);
+	//Trit& operator=(trit);
+	//trit operator[](int) const;
 
-	Trit& operator=(const TritSet&);
-	trit operator[](int) const;
-
-	Trit operator&(Trit&) const;
-	Trit operator|(Trit&) const;
+	Trit operator&(const Trit&) const;
+	Trit operator|(const Trit&) const;
 	Trit operator~();
-	Trit operator^(Trit&);
-	Trit operator&=(Trit&);
-	Trit operator|=(Trit&);
-	Trit operator^=(Trit&);
+	Trit operator^(const Trit&);
+	Trit operator&=(const Trit&);
+	Trit operator|=(const Trit&);
+	Trit operator^=(const Trit&);
 
 private:
-	uint8_t trit_4;
+	trit o_trit;
 };
 
 #endif

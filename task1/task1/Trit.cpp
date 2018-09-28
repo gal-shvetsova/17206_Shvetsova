@@ -14,6 +14,35 @@ trit Trit::define(int start, int finish) const
 		return False;
 }
 
+trit Trit::operator&(const Trit& some_trit) const
+{
+	if (o_trit == False || some_trit.o_trit == False)
+		return False;
+	if (o_trit == True && some_trit.o_trit == True)
+		return True;
+	else
+		return Unknown;
+}
+
+trit Trit::operator|(const Trit& some_trit) const
+{
+	if (o_trit == False && some_trit.o_trit == False)
+		return False;
+	if (o_trit == True || some_trit.o_trit == True)
+		return True;
+	else
+		return Unknown;
+}
+
+trit Trit::operator~ () const
+{
+	if (o_trit == True)
+		return False;
+	if (o_trit == False)
+		return True;
+	else
+		return Unknown;
+}
 
 //trit Trit::get(int index, Trit g_trit) const
 ////get trit from byte

@@ -5,7 +5,7 @@
 #include "stdint.h"
 #include "Trit.h"
 #include "Other.h"
-
+#include <unordered_map>
 
 
 class TritSet
@@ -13,53 +13,94 @@ class TritSet
 public:
 
 	class Reference { 
+		friend Trit;
 	protected:
 		TritSet *set;  // pointer to number from array
-		size_t index_in_number; // index in number
-		size_t index_in_trit_a; //index in array
+		uint index_in_number; // index in number
+		uint index_in_trit_a; //index in array
 		void reallocate(); 
 	public:
-		Reference(const TritSet*, size_t, size_t);
-		Reference(TritSet*, size_t, size_t);
+		Reference(const TritSet*, uint, uint);
+		Reference(TritSet*, uint, uint);
 
-		bool operator==(const Reference&);
-		bool operator==(const trit&);
+		friend bool operator==(const Reference&, const trit&);
+		bool operator==(const Reference&) const;
+		bool operator!=(const Reference) const;
+		friend bool operator!=(const Reference&, const trit&);
 
 		Reference operator= (const trit&); // t[i] = x
 		Reference operator= (const Reference&); // t[i] = t[j]
 
+		trit operator& (const trit&) const;
 		trit operator& (const Reference&) const;
+		friend trit operator&(const trit&, const trit&);
+		friend trit operator&(const trit&, const TritSet::Reference&);
+
+		trit operator| (const trit&) const;
 		trit operator| (const Reference&) const;
+		friend trit operator|(const trit&, const trit&);
+		friend trit operator|(const trit&, const TritSet::Reference&);
+		
 		trit operator~ () const;
-		//~Reference();
+		friend trit operator~(const trit&);
+
+		
+		TritSet* get_tritset() const;
+		uint get_intindex() const;
+		uint get_arrayindex() const;
+		void set_intindex(const uint&);
+		void set_arrayindex(const uint&);
+
+		friend std::ostream& operator<<(std::ostream& os, const Reference&);
 	};
 
 	TritSet();
-	TritSet(const TritSet&);  //copy ??
+	TritSet(const TritSet&);  //copy 
 	explicit TritSet(uint);  //create vector with some size 
 
-	trit get_trit(uint) const;
+	trit get_trit(const uint&) const;
 
 	TritSet& operator=(const TritSet&);
-	Reference operator[](const int&) const;
+	
+	const Reference operator[](const int&) const;
+	Reference operator[](const int& index);
 
-	TritSet operator&(TritSet&) const;
-	TritSet operator|(TritSet&) const;
-	TritSet operator~();
-	TritSet operator^(TritSet&);
-	TritSet operator&=(TritSet&);
-	TritSet operator|=(TritSet&);
-	TritSet operator^=(TritSet&);
+	TritSet operator&(const TritSet&) const;
+	TritSet operator|(const TritSet&) const;
+	TritSet operator~() const;
 
-	int in_state(TritSet, trit) const;  // count of trits in some state
-	void trim(size_t lastIndex); // forget contain of trits starting from lastIndex
-	size_t length(); // index of last non-uknown trit +1
+	void cut_to_trit(uint);
+	void shrink();
+	std::unordered_map< trit, uint > cardinality();
+	void trim(uint); // forget contain of trits starting from lastIndex
+	uint length(); // index of last non-uknown trit +1
+	uint cardinality(trit value) const; // count of trits in some state
 
-//	~TritSet();
+	class Trit_Iterator : public std::iterator<std::input_iterator_tag, Reference>
+	{
+		friend Reference;
+	private:
+		
+		Reference pointer;
+	public:
+		explicit Trit_Iterator(Reference);
+		Trit_Iterator(const Trit_Iterator&);
+		bool operator!=(Trit_Iterator const&) const;
+		bool operator==(Trit_Iterator const&) const;
+		trit operator*() const;
+		Trit_Iterator& operator++();
+		friend std::ostream& operator<<(std::ostream&, const Trit_Iterator);
+	};
+
+	typedef Trit_Iterator iterator;
+
+	iterator begin();
+	iterator end();
 private:
+	
 	std::vector<uint> trits;
-	size_t totalsize;
-
+	int last_trit_i = -1;
+	int last_set_trit_i = -1;
 };
 
 #endif

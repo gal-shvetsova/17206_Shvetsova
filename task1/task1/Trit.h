@@ -14,13 +14,13 @@ public:
 	//Trit& operator=(trit);
 	//trit operator[](int) const;
 
-	Trit operator&(const Trit&) const;
-	Trit operator|(const Trit&) const;
-	Trit operator~();
-	Trit operator^(const Trit&);
-	Trit operator&=(const Trit&);
-	Trit operator|=(const Trit&);
-	Trit operator^=(const Trit&);
+	trit operator&(const Trit&) const;
+	trit operator|(const Trit&) const;
+	trit operator~() const;
+	trit operator^(const Trit&);
+	trit operator&=(const Trit&);
+	trit operator|=(const Trit&);
+	trit operator^=(const Trit&);
 
 private:
 	trit o_trit;

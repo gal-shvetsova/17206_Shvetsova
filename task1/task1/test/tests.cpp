@@ -12,8 +12,8 @@
    TEST (tritset_tests, create) {
        ASSERT_EQ(TritSet().get_size(), 0);
        ASSERT_EQ(TritSet().get_last_i(), -1);
-       ASSERT_EQ(TritSet(100).get_size(), 100 * 2 / sizeof(uint) / 8);
-       ASSERT_EQ(TritSet(18).get_size(), 18 * 2 / sizeof(uint) / 8);
+       ASSERT_EQ(TritSet(100).get_size(), 100 * 2 / sizeof(uint) / 8 + 1);
+       ASSERT_EQ(TritSet(18).get_size(), 18 * 2 / sizeof(uint) / 8 + 1);
        ASSERT_EQ(TritSet(100).get_last_i(), -1);
        TritSet some(20);
        TritSet other = some;
@@ -24,7 +24,7 @@
    TEST (tritset_tests,getsize)
    {
        TritSet some (30);
-       ASSERT_EQ(some.get_size(), 30 * 2 / sizeof(uint) / 8);
+       ASSERT_EQ(some.get_size(), 30 * 2 / sizeof(uint) / 8 + 1);
    }
    
   
@@ -37,7 +37,7 @@
        ASSERT_EQ(some.get_last_i(), 12);
        ASSERT_EQ(some.get_size(), 11 * 2 / sizeof(uint) / 8 + 1);
        ASSERT_EQ(some[10], True);
-       ASSERT_EQ(some[12], False);
+       ASSERT_EQ(some[12], Unknown);
    }
    
    TEST(trit_set_test, shrink)
@@ -49,7 +49,7 @@
    	other[15] = True;
    	other.shrink();
    	ASSERT_EQ(other.get_size(), 15 * 2 / sizeof(uint) / 8 + 1);
-   	ASSERT_EQ(other[15], True);
+   	ASSERT_EQ(other[15], Unknown);
    }
    
    TEST(trit_set_test, trim)
@@ -58,7 +58,7 @@
    	for (int i = 0; i < 5; i++)
    		some[i] = True;
    	some.trim(3);
-   	ASSERT_EQ(some[3], True);
+   	ASSERT_EQ(some[2], True);
    	ASSERT_EQ(some[4], Unknown);
    	ASSERT_EQ(some.get_last_i(), 3);
    }
@@ -106,40 +106,6 @@
    	 ASSERT_EQ(some[0] != False, false);
    	some[1] = False;
    	 ASSERT_EQ(some[1] != some[0], false);
-   }
-   
-   TEST(iterator_test, equality)
-   {
-   	TritSet some(40);
-   	TritSet::iterator ptr(some[20]);
-   	TritSet::iterator ptr2(some[10]);
-   	TritSet::iterator ptr3(some[10]);
-   	 ASSERT_EQ(ptr == ptr2, false);
-   	 ASSERT_EQ(ptr3 == ptr2, true);
-   }
-   
-   TEST(iterator_test, n_equality)
-   {
-   	TritSet some(40);
-   	TritSet::iterator ptr(some[20]);
-   	TritSet::iterator ptr2(some[10]);
-   	TritSet::iterator ptr3(some[10]);
-   	 ASSERT_EQ(ptr != ptr2, true);
-   	 ASSERT_EQ(ptr3 != ptr2, false);
-   }
-   
-  
-   TEST(iterator_test, pointer)
-   {
-   	TritSet some(40);
-   	TritSet::iterator ptr(some[20]);
-   	TritSet::iterator ptr1(some[2]);
-   	TritSet::iterator ptr2(some[35]);
-   	some[20] = True;
-   	some[2] = False;
-   	 ASSERT_EQ(*ptr == True, true);
-   	 ASSERT_EQ(*ptr1 == False, true);
-   	 ASSERT_EQ(*ptr2 == Unknown, true);
    }
    
    int main(int argc, char **argv) {

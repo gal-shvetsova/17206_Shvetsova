@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "stdint.h"
-#include "Trit.h"
 #include "Other.h"
 #include <unordered_map>
 

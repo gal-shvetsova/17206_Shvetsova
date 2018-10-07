@@ -1,32 +1,22 @@
 #include "TritSet.h"
+#include "Other.h"
 #include <iostream>
-#include <cstddef>
+
 int main()
 {
-	TritSet t(100);
-	TritSet t2(5);
-	TritSet t3(2);
-	t3 = t2;
-	int test;
-	trit some = True;
-	//TritSet::iterator p = t.begin();
-	//for (p; p < t.end; p++)
-	std::cout << "false";
-	int b = test = 8;
-
-	t[3] = True;
-	t[60] = True;
-	t[25] = False;
-	trit tr = True;
-	//if (t[15] == t[25])
-	std::unordered_map<trit, uint> n = t.cardinality();
-	tr = t.get_trit(60);
-	test = t.cardinality(Unknown);
-	t[60] = some & t[15];
-	t3 = t & t2;
-	trit c = t.get_trit(15);
-	test = sizeof(uint);
-	t[3200] = Unknown;
-	
+	TritSet some(35);
+	some[15] = True;  
+	some[10] = True;
+	some.cut_to_trit(15);
+	//for (int i = 0; i < 30; i++)
+	//	some[i] = True;
+	some[1] = True;
+	some[2] = True;
+	some[3] = True;
+	some[4] = True;
+	for (int i = 0; i < 30; i++)
+		some[i] = True;
+	for (int i = 0; i < 30; i++)
+		std::cout << some[i];
 	return 0;
 }

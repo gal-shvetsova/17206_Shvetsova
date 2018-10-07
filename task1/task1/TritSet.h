@@ -13,8 +13,7 @@ class TritSet
 public:
 
 	class Reference { 
-		friend Trit;
-	protected:
+	private:
 		TritSet *set;  // pointer to number from array
 		uint index_in_number; // index in number
 		uint index_in_trit_a; //index in array
@@ -22,6 +21,7 @@ public:
 	public:
 		Reference(const TritSet*, uint, uint);
 		Reference(TritSet*, uint, uint);
+		Reference(const Reference&);
 
 		friend bool operator==(const Reference&, const trit&);
 		bool operator==(const Reference&) const;
@@ -59,6 +59,9 @@ public:
 	explicit TritSet(uint);  //create vector with some size 
 
 	trit get_trit(const uint&) const;
+	const int get_size() const;
+	const int get_last_set_i() const;
+	const int get_last_i() const;
 
 	TritSet& operator=(const TritSet&);
 	
@@ -75,27 +78,6 @@ public:
 	void trim(uint); // forget contain of trits starting from lastIndex
 	uint length(); // index of last non-uknown trit +1
 	uint cardinality(trit value) const; // count of trits in some state
-
-	class Trit_Iterator : public std::iterator<std::input_iterator_tag, Reference>
-	{
-		friend Reference;
-	private:
-		
-		Reference pointer;
-	public:
-		explicit Trit_Iterator(Reference);
-		Trit_Iterator(const Trit_Iterator&);
-		bool operator!=(Trit_Iterator const&) const;
-		bool operator==(Trit_Iterator const&) const;
-		trit operator*() const;
-		Trit_Iterator& operator++();
-		friend std::ostream& operator<<(std::ostream&, const Trit_Iterator);
-	};
-
-	typedef Trit_Iterator iterator;
-
-	iterator begin();
-	iterator end();
 private:
 	
 	std::vector<uint> trits;

@@ -15,6 +15,14 @@ TritSet::Reference::Reference(TritSet* other, uint i, uint a)
 	index_in_trit_a = a;
 }
 
+TritSet::Reference::Reference(const TritSet::Reference& obj)  //new
+{
+	set = obj.set;
+	index_in_number = obj.get_intindex();
+	index_in_trit_a = obj.get_arrayindex();
+}
+
+
 void TritSet::Reference::reallocate()
 //reallocate memory for trits array
 {
@@ -61,7 +69,7 @@ TritSet::Reference TritSet::Reference::operator= (const trit& trit_ref)
 	}
 
 	int shift = BITS_FOR_UINT - (index_in_number + 1) * BITS_FOR_TRIT;
-	uint clear_mask = static_cast<uint>(~(0x11 << shift));
+	uint clear_mask = static_cast<uint>(~(3 << shift));
 	set->trits[index_in_trit_a] &= clear_mask;
 	uint fill_mask = trit_ref << shift;
 	set->trits[index_in_trit_a] |= fill_mask;
@@ -147,7 +155,7 @@ trit TritSet::Reference::operator| (const Reference& trit_ref) const
 	trit trit2 = set->get_trit((index_in_trit_a * BITS_FOR_UINT / sizeof(uint)* BITS_FOR_TRIT + index_in_number));
 	if (trit1 == True || trit2 == True)
 		return True;
-	if (trit1 == False && trit2 == False)
+	if (trit1 == False && trit2 == trit::False)
 		return False;
 	else
 		return Unknown;

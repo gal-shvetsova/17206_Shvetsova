@@ -15,14 +15,6 @@ TritSet::Reference::Reference(TritSet* other, uint i, uint a)
 	index_in_trit_a = a;
 }
 
-TritSet::Reference::Reference(const TritSet::Reference& obj)  //new
-{
-	set = obj.set;
-	index_in_number = obj.get_intindex();
-	index_in_trit_a = obj.get_arrayindex();
-}
-
-
 void TritSet::Reference::reallocate()
 //reallocate memory for trits array
 {

@@ -5,15 +5,6 @@ TritSet::TritSet()
 	trits.resize(0);
 }
 
-TritSet::TritSet(const TritSet& obj)
-{
-	trits.resize(obj.trits.size());
-	last_set_trit_i = obj.last_set_trit_i;
-	last_trit_i = obj.last_trit_i;
-	for (uint i = 0; i < trits.size(); i++)
-		trits[i] = obj.trits[i];
-}
-
 TritSet::TritSet(uint new_size)
 {
 	trits.resize(BITS_FOR_TRIT * new_size / BITS_FOR_UINT + 1);

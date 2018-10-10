@@ -18,9 +18,8 @@ public:
 		uint index_in_trit_a; //index in array
 		void reallocate(); 
 	public:
-		Reference(const TritSet*, uint, uint);
-		Reference(TritSet*, uint, uint);
-		Reference(const Reference&);
+		Reference(const TritSet*, uint, uint); 
+		Reference(TritSet*, uint, uint); 
 
 		friend bool operator==(const Reference&, const trit&);
 		bool operator==(const Reference&) const;
@@ -28,7 +27,7 @@ public:
 		friend bool operator!=(const Reference&, const trit&);
 
 		Reference operator= (const trit&); // t[i] = x
-		Reference operator= (const Reference&); // t[i] = t[j]
+		Reference operator= (const Reference&); // t[i] = t[j] 
 
 		trit operator& (const trit&) const;
 		trit operator& (const Reference&) const;
@@ -54,7 +53,6 @@ public:
 	};
 
 	TritSet();
-	TritSet(const TritSet&);  //copy 
 	explicit TritSet(uint);  //create vector with some size 
 
 	trit get_trit(const uint&) const;
@@ -62,7 +60,7 @@ public:
 	const int get_last_set_i() const;
 	const int get_last_i() const;
 
-	TritSet& operator=(const TritSet&);
+	TritSet& operator=(const TritSet&); //удалить
 	
 	const Reference operator[](const int&) const;
 	Reference operator[](const int& index);

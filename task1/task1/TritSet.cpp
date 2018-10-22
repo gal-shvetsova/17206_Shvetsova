@@ -10,38 +10,12 @@ TritSet::TritSet(uint new_size)
 	trits.resize(BITS_FOR_TRIT * new_size / BITS_FOR_UINT + 1);
 }
 
-trit TritSet::get_trit(const uint& index) const
-{
-	uint index_in_trit_a = (index * BITS_FOR_TRIT) / (BITS_FOR_UINT);
-	uint index_in_number = index % (BITS_FOR_UINT / BITS_FOR_TRIT);
-	if (index_in_trit_a >= trits.size())
-		return Unknown;
-	int shift = BITS_FOR_UINT - BITS_FOR_TRIT*(index_in_number + 1);
-	return static_cast<trit> (3 & (trits[index_in_trit_a] >> shift));
-}
-
-const int TritSet::get_size() const
-{
-	return trits.size();
-}
-
-const int TritSet::get_last_i() const
-{
-	return last_trit_i;
-}
-
-
-const int TritSet::get_last_set_i() const
-{
-	return last_set_trit_i;
-}
-
-const TritSet::Reference TritSet::operator[](const int& index) const
+const trit TritSet::operator[](const int& index) const
 {
 	size_t array_index = index % (BITS_FOR_UINT / BITS_FOR_TRIT),  //index in number 
 		int_index = (index * BITS_FOR_TRIT / BITS_FOR_UINT); // index in array of int
-	const Reference ref(this, array_index, int_index);
-	return ref;
+	Reference ref(this, array_index, int_index);
+	return ref.get_trit();
 }
 
 TritSet::Reference TritSet::operator[](const int& index)
@@ -52,32 +26,21 @@ TritSet::Reference TritSet::operator[](const int& index)
 	return ref;
 }
 
-TritSet& TritSet::operator=(const TritSet& obj)
-{
-	int totalsize = BITS_FOR_TRIT * obj.trits.size() / BITS_FOR_UINT ;
-	trits.resize(totalsize);
-	last_set_trit_i = obj.last_set_trit_i;
-	last_trit_i = obj.last_trit_i;
-	for (int i = 0; i < totalsize; i++)
-		trits[i] = obj.trits[i];
-	return *this;
-}
-
 TritSet TritSet::operator&(const TritSet& set)  const
 {
 	int max, min;
 	TritSet t_max, t_min;
-	if (get_size() > set.get_size())
+	if (trits.size() > set.trits.size())
 	{
-		max = get_size();
-		min = set.get_size();
+		max = trits.size();
+		min = set.trits.size();
 		t_max = (*this);
 		t_min = set;
 	}
 	else
 	{
-		max = set.get_size();
-		min = get_size();
+		max = set.trits.size();
+		min = trits.size();
 		t_min = (*this);
 		t_max = set;
 	}
@@ -131,16 +94,6 @@ TritSet TritSet::operator~() const
 	return result;
 }
 
-void TritSet::cut_to_trit(uint index)
-{
-	uint size = index / (BITS_FOR_UINT / BITS_FOR_TRIT);
-	size += index % (BITS_FOR_UINT / BITS_FOR_TRIT) ? 1 : 0;
-	for (int i = index; i <= last_trit_i; i++)
-		(*this)[i] = Unknown;
-	trits.resize(size);
-	last_trit_i = index;
-}
-
 void TritSet::shrink()
 //forget all from last set trit to the end
 {
@@ -150,17 +103,19 @@ void TritSet::shrink()
 		last_set_trit_i = -1;
 		return;
 	}
-	cut_to_trit(last_set_trit_i);
+	trim(last_set_trit_i);
 }
 
 void TritSet::trim(uint index)
 //forget all from index to the end
 {
+	uint size = index / (BITS_FOR_UINT / BITS_FOR_TRIT);
+	size += index % (BITS_FOR_UINT / BITS_FOR_TRIT) ? 1 : 0;
 	for (int i = index; i <= last_trit_i; i++)
 		(*this)[i] = Unknown;
 	last_set_trit_i = index;
 	last_trit_i = index;
-	shrink();
+	trits.resize(size);
 }
 
 uint TritSet::length()

@@ -4,34 +4,33 @@
 #include <string>
 #include "Factory.h"
 #include "Creator.h"
-Operator::~Operator()
-{
-}
 
-int add_commands() noexcept
-{
-	AddCreator* add = new AddCreator;
-	Factory::get_instance()->make_command("+", add);
-	SubCreator* sub = new SubCreator;
-	Factory::get_instance()->make_command("-", sub);
-	MulCreator* mul = new MulCreator;
-	Factory::get_instance()->make_command("*", mul);
-	DivCreator* div = new DivCreator;
-	Factory::get_instance()->make_command("/", div);
-	SqrtCreator* sqrt = new SqrtCreator;
-	Factory::get_instance()->make_command("SQRT", sqrt);
-	PopCreator* pop = new PopCreator;
-	Factory::get_instance()->make_command("POP", pop);
-	PushCreator* push = new PushCreator;
-	Factory::get_instance()->make_command("PUSH", push);
-	PrintCreator* print = new PrintCreator;
-	Factory::get_instance()->make_command("PRINT", print);
-	DefineCreator* define = new DefineCreator;
-	Factory::get_instance()->make_command("DEFINE", define);
-	return 1;
-}
+namespace {
+	bool add_commands() noexcept
+	{
+		AddCreator* add = new AddCreator;
+		Factory::get_instance()->make_command("+", add);
+		SubCreator* sub = new SubCreator;
+		Factory::get_instance()->make_command("-", sub);
+		MulCreator* mul = new MulCreator;
+		Factory::get_instance()->make_command("*", mul);
+		DivCreator* div = new DivCreator;
+		Factory::get_instance()->make_command("/", div);
+		SqrtCreator* sqrt = new SqrtCreator;
+		Factory::get_instance()->make_command("SQRT", sqrt);
+		PopCreator* pop = new PopCreator;
+		Factory::get_instance()->make_command("POP", pop);
+		PushCreator* push = new PushCreator;
+		Factory::get_instance()->make_command("PUSH", push);
+		PrintCreator* print = new PrintCreator;
+		Factory::get_instance()->make_command("PRINT", print);
+		DefineCreator* define = new DefineCreator;
+		Factory::get_instance()->make_command("DEFINE", define);
+		return 1;
+	}
 
-int a = add_commands();
+	bool fake = add_commands();
+}
 
 bool check(std::string buffer)
 {

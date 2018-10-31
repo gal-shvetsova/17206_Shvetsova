@@ -16,12 +16,6 @@ public:
 	virtual ~Operator() = 0;
 };
 
-class Creator
-{
-public:
-	virtual Operator* factoryMethod() = 0;
-};
-
 class Add : public Operator
 {
 public:

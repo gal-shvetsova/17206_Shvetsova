@@ -15,55 +15,91 @@ public:
 class AddCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Add* add = new Add;
+		return add;
+	}
 };
 
 class SubCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Subtract* sub = new Subtract;
+		return sub;
+	}
 };
 
 class MulCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Multiplicate* mul = new Multiplicate;
+		return mul;
+	}
 };
 
 class DivCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Division* div = new Division;
+		return div;
+	}
 };
 
 class SqrtCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Sqrt* sqrt = new Sqrt;
+		return sqrt;
+	}
 };
 
 class PrintCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Print* print = new Print;
+		return print;
+	}
 };
 
 class PopCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Pop* pop = new Pop;
+		return pop;
+	}
 };
 
 class PushCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Push* push = new Push;
+		return push;
+	}
 };
 
 class DefineCreator : public OperatorCreater
 {
 public:
-	Operator* create() override;
+	Operator* create() override
+	{
+		Define* define = new Define;
+		return define;
+	}
 };
 
 

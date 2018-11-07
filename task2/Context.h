@@ -14,12 +14,9 @@ using std::stack;
 using std::map;
 using std::string;
 
-list<string> get_arg_l(string& buffer);
-
 class Context
 {
 public:
-	void compute(std::istream&, std::ostream&);
 
 	//work with stack
 	double pop_arg();
@@ -31,6 +28,15 @@ public:
 	double find_var(string&);
 	void add_var(string, double);
 	bool is_empty_var();
+
+	
+	//work with list
+	void get_arg_l(string& buffer);
+	int size_l();
+	std::string front_l();
+	std::string& back_l();
+	void pop_back_l();
+	void pop_front_l();
 
 private:
 	stack<double> arg_stack;

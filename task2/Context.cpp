@@ -2,14 +2,13 @@
 #include "Creator.h"
 #include <stack>
 #include <string.h>
-#include "Factory.h";
+#include "Factory.h"
 #include "Exceptions.h"
 
 using std::string;
 
-list<string> get_arg_l(string& buffer)
+void Context::get_arg_l(string& buffer)
 {
-	list <string> args;
 	int j = 0;
 	for (int i = 0; i < buffer.length(); i++)
 	{
@@ -22,46 +21,31 @@ list<string> get_arg_l(string& buffer)
 	}
 	if (j < buffer.length())
 		args.push_back(buffer.substr(j, buffer.length() - j));
-	return args;
 }
 
-void Context::compute(std::istream& in, std::ostream& out)
+int Context::size_l()
 {
-	string buffer, operation;
-	OperatorCreater creator;
-	while (!in.eof())
-	{
-		std::getline(in, buffer, '\n');
-		args = get_arg_l(buffer);
-		try 
-		{
-			if (!args.size())
-			{
-				throw empty_args();
-			}
-		}
-		catch (calc_except& exc)
-		{
-			out << exc.what() << "\n";
-			continue;
-		}
-		operation = args.front();
-		args.pop_front();
-		if (operation.front() != '#')
-		{
-			try
-			{
-			Operator*  some_oper = Factory::get_instance()->get_operator(operation);
-			
-				some_oper->make_operation(*this, args);
-			}
-			catch (calc_except& exc)
-			{
-				out << exc.what() << "\n";
-			}
-		}
+	return args.size();
+}
 
-	}
+std::string Context::front_l()
+{
+	return args.front();
+}
+
+std::string& Context::back_l()
+{
+	return args.back();
+}
+
+void Context::pop_back_l()
+{
+	args.pop_back();
+}
+
+void Context::pop_front_l()
+{
+	args.pop_front();
 }
 
 double Context::pop_arg()

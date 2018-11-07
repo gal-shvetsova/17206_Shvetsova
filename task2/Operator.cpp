@@ -42,22 +42,22 @@ bool check(std::string buffer)
 	return 0;
 }
 
-void Add::make_operation(Context& context, list<string>& args)
+void Add::make_operation(Context& context)
 {
 	double arg[2];
-	if (args.size() + context.size_arg() < 2)
+	if (context.size_l() + context.size_arg() < 2)
 		throw empty_args();
 	int counter = 0;
-	while (counter != 2 && args.size()) 
+	while (counter != 2 && context.size_l())
 	{
-		arg[counter] = context.find_var(args.back());
+		arg[counter] = context.find_var(context.back_l());
 		if (arg[counter] == DBL_MIN)
 		{
-			if (!check(args.back()))
+			if (!check(context.back_l()))
 				throw invalid_arg();
-			arg[counter] = std::stod(args.back());
+			arg[counter] = std::stod(context.back_l());
 		}
-		args.pop_back();
+		context.pop_back_l();
 		counter++;
 	}
 	while (counter != 2)
@@ -68,22 +68,22 @@ void Add::make_operation(Context& context, list<string>& args)
 	context.push_arg(arg[0] + arg[1]);
 }
 
-void Subtract::make_operation(Context& context, list<string>& args)
+void Subtract::make_operation(Context& context)
 {
 	double arg[2];
-	if (args.size() + context.size_arg() < 2)
+	if (context.size_l() + context.size_arg() < 2)
 		throw empty_args();
 	int counter = 0;
-	while (counter != 2 && args.size()) 
+	while (counter != 2 && context.size_l()) 
 	{
-		arg[counter] = context.find_var(args.back());
+		arg[counter] = context.find_var(context.back_l());
 		if (arg[counter] == DBL_MIN)
 		{
-			if (!check(args.back()))
+			if (!check(context.back_l()))
 				throw invalid_arg();
-			arg[counter] = std::stod(args.back());
+			arg[counter] = std::stod(context.back_l());
 		}
-		args.pop_back();
+		context.pop_back_l();
 		counter++;
 	}
 	while (counter != 2)
@@ -94,22 +94,22 @@ void Subtract::make_operation(Context& context, list<string>& args)
 	context.push_arg(arg[1] - arg[0]);
 }
 
-void Multiplicate::make_operation(Context& context, list<string>& args)
+void Multiplicate::make_operation(Context& context)
 {
 	double arg[2];
-	if (args.size() + context.size_arg() < 2)
+	if (context.size_l() + context.size_arg() < 2)
 		throw empty_args();
 	int counter = 0;
-	while (counter != 2 && args.size()) 
+	while (counter != 2 && context.size_l()) 
 	{
-		arg[counter] = context.find_var(args.back());
+		arg[counter] = context.find_var(context.back_l());
 		if (arg[counter] == DBL_MIN)
 		{
-			if (!check(args.back()))
+			if (!check(context.back_l()))
 				throw invalid_arg();
-			arg[counter] = std::stod(args.back());
+			arg[counter] = std::stod(context.back_l());
 		}
-		args.pop_back();
+		context.pop_back_l();
 		counter++;
 	}
 	while (counter != 2)
@@ -120,22 +120,22 @@ void Multiplicate::make_operation(Context& context, list<string>& args)
 	context.push_arg(arg[0] * arg[1]);
 }
 
-void Division::make_operation(Context& context, list<string>& args)
+void Division::make_operation(Context& context)
 {
 	double arg[2];
-	if (args.size() + context.size_arg() < 2)
+	if (context.size_l() + context.size_arg() < 2)
 		throw empty_args();
 	int counter = 0;
-	while (counter != 2 && args.size()) 
+	while (counter != 2 && context.size_l()) 
 	{
-		arg[counter] = context.find_var(args.back());
+		arg[counter] = context.find_var(context.back_l());
 		if (arg[counter] == DBL_MIN)
 		{
-			if (!check(args.back()))
+			if (!check(context.back_l()))
 				throw invalid_arg();
-			arg[counter] = std::stod(args.back());
+			arg[counter] = std::stod(context.back_l());
 		}
-		args.pop_back();
+		context.pop_back_l();
 		counter++;
 	}
 	while (counter != 2)
@@ -148,22 +148,22 @@ void Division::make_operation(Context& context, list<string>& args)
 	context.push_arg(arg[1] / arg[0]); 
 }
 
-void Sqrt::make_operation(Context& context, list<string>& args)
+void Sqrt::make_operation(Context& context)
 {
 	double arg;
-	if (args.size() + context.size_arg() < 1)
+	if (context.size_l() + context.size_arg() < 1)
 		throw empty_args();
 	int counter = 0;
-	if (args.size())
+	if (context.size_l())
 	{
-		arg = context.find_var(args.back());
+		arg = context.find_var(context.back_l());
 		if (arg == DBL_MIN)
 		{
-			if (!check(args.back()))
+			if (!check(context.back_l()))
 				throw invalid_arg();
-			arg = std::stod(args.back());
+			arg = std::stod(context.back_l());
 		}
-		args.pop_back();
+		context.pop_back_l();
 	} 
 	else 
 		arg = context.pop_arg();
@@ -172,44 +172,44 @@ void Sqrt::make_operation(Context& context, list<string>& args)
 	context.push_arg(sqrt(arg));
 }
 
-void Pop::make_operation(Context& context, list<string>& args)
+void Pop::make_operation(Context& context)
 {
 	if (context.size_arg() <= 0)
 		throw empty_stack();
 	context.pop_arg();
 }
 
-void Push::make_operation(Context& context, list<string>& args)
+void Push::make_operation(Context& context)
 {
 	
 	double arg = DBL_MIN;
 	if (!context.is_empty_var())
-		arg = context.find_var(args.back());
+		arg = context.find_var(context.back_l());
 	if (arg == DBL_MIN)
 	{
-		if (!check(args.back()))
+		if (!check(context.back_l()))
 			throw invalid_arg();
-		arg = std::stod(args.back());
+		arg = std::stod(context.back_l());
 	}	
-	args.pop_back();
+	context.pop_back_l();
 	context.push_arg(arg);
 }
 
-void Print::make_operation(Context& context, list<string>& args)
+void Print::make_operation(Context& context)
 {
 	if (!context.size_arg())
 		throw empty_stack();
 	std::cout << context.top_arg();
 }
 
-void Define::make_operation(Context& context, list<string>& args)
+void Define::make_operation(Context& context)
 {
-	if (!args.size())
+	if (!context.size_l())
 		throw empty_args();
-	std::string variable = args.back();
-	args.pop_back();
-	std::string name = args.back();
-	if (!check(args.back()))
+	std::string variable = context.back_l();
+	context.pop_back_l();
+	std::string name = context.back_l();
+	if (!check(context.back_l()))
 		throw invalid_arg();
 	context.add_var(name, std::stod(variable));
 }

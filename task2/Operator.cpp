@@ -1,4 +1,4 @@
-#include "Operator.h"
+#include "BasicOp.h"
 #include <math.h>
 #include "Exceptions.h"
 #include <string>

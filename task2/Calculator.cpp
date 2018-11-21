@@ -34,7 +34,7 @@ void Calculator::compute(std::istream& in, std::ostream& out)
 		{
 			try
 			{
-				Operator*  some_oper = Factory::get_instance()->get_operator(operation);
+				std::auto_ptr<Operator>  some_oper( Factory::get_instance()->get_operator(operation) );
 
 				some_oper->make_operation(context);
 			}

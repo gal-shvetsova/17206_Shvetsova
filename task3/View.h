@@ -7,19 +7,25 @@
 #define DOWN 2
 #define RIGHT 3
 #define LEFT 4
+
 class View
 {
 public:
-	View(Model);
+	View(Model*);
+	View() = default;
 	~View() = default;
-	View(View &);
+	View(View*);
 	View& operator=(View&);
-	void print();// std::ostream); для тестов заменить (саша не трогай)
+	void print();
 	void printField();
-	void readMove(int&, int&);//, std::ostream);
-	//void answer(); // ?? 
-	Model& getModel();
-//private:
+	void readMove(int&, int&);
+	void printGamer();
+	void printError();
+	int turn(int);
+	void printRound(int);
+	void printWinner(int);
+	void answer(int); 
+private:
 	Model* model;
 };
 

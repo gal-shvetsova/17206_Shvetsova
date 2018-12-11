@@ -9,10 +9,9 @@
 class SeaBattle
 {
 public:
-	SeaBattle();
-	~SeaBattle();
-	void Play();
+	void Play(const std::string &firstType, const std::string &secondType, const int rounds);
 private:
+
 };
 
 #endif 

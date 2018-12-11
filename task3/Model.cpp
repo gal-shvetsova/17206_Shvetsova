@@ -1,51 +1,74 @@
 #include "Model.h"
 #include <algorithm>
 #include <iostream>
+#include "View.h"
 
-int checkPoint(int x, int y, int** field)  //условия норм сделать и передавать в функцию таблицу ассерты убрать из модели и передвать поле
+int Model::checkPoint(int x, int y)  
 {
+	int** field;
+	if (gamer == 1 && state == FILL_1)
+		field = Field1;
+	else if (gamer == 1 && state == FIRE_1)
+		field = Field2;
+	else if (gamer == 2 && state == FILL_2)
+		field = Field2;
+	else if (gamer == 2 && state == FIRE_2)
+		field = Field1;
+	else
+		return 0;
+	if (x < 0 || x > 9 || y < 0 || y > 9) return 0;
 		if (field[x][y] || (x + 1 < 10 && field[x + 1][y]) || (x - 1 >= 0 && field[x - 1][y]) || (y - 1 >= 0 && field[x][y - 1]) || (y + 1 < 10 && field[x][y + 1]) ||
 			(x + 1 < 10 && y + 1 < 10 && field[x + 1][y + 1]) || (x + 1 < 10 && y - 1 >= 0 && field[x + 1][y - 1]) || (x > 0 && y > 0 && field[x - 1][y - 1]) || (x > 0 && y < 9 && field[x - 1][y + 1]))
 			return 0;
 	return 1;
 }
 
-int checkKill(int x, int y, int** field) //? 
-{
-	int i, k;
-	if (x < 8)
-		i = (field[x + 1][y] >= SHIP);
-	if (x > 0)
-		i = -(field[x - 1][y] >= SHIP);
-	if (y < 8)
-		k = (field[x][y + 1] >= SHIP);
-	if (y > 0)
-		k = -(field[x + 1][y] >= SHIP);
-	while (field[x][y] > SHIP)
-	{
-		x += i;
-		y += k;
-		if (field[x][y] == SHIP)
-		return 0;
-	}
-	return 1;
-}
 
-int checkShip(int x, int y, int** field)
+int Model::checkShip(int x, int y)
 {
-	if (field[x][y] == WOUND || field[x][y] == MISSED)
-			return 0;
+	int** field = gamer == 1 ? Field2 : Field1;
+	if (x < 0 || x > 9 || y < 0 || y > 9  || field[x][y] == WOUND || field[x][y] == MISSED)
+			return UNKNOWN;
 	if (field[x][y] == SHIP)
 	{
 		field[x][y] = WOUND;
-		return 2;
+		return WOUND;
 	}
 	else if (field[x][y] == UNKNOWN)
 	{
 		field[x][y] = MISSED;
-		return 1;
+		return MISSED;
 	}
-	return 0;
+	return UNKNOWN;
+}
+
+int Model::findShipDirection(int x, int y, int& direction)
+{
+	direction = setDirection(x, y);
+	if (direction == -1)
+		return -1;
+	if (direction == UP)
+		return checkShip(x - 1, y);
+	if (direction == DOWN)
+		return checkShip(x + 1, y);
+	if (direction == RIGHT)
+		return checkShip(x, y + 1);
+	if (direction == LEFT)
+		return checkShip(x, y - 1);
+}
+
+int Model::setDirection(int x, int y)
+{
+	int** field = gamer == 1 ? Field2 : Field1;
+	if (x + 1 < 10 && field[x + 1][y] != 1)
+		return DOWN;
+	if (x - 1 >= 0 && field[x - 1][y] != 1)
+		return UP;
+	if (y - 1 >= 0 && field[x][y - 1] != 1)
+		return LEFT;
+	if (y + 1 < 10 && field[x][y + 1] != 1)
+		return RIGHT;
+	return -1;
 }
 
 int Model::winner()
@@ -75,34 +98,6 @@ int ** Model::getEnemyField()
 		return Field1;
 }
 
-Model::Model (Model & m)
-{
-	gamer = 1;
-	Field1 = m.getField();
-	Field2 = m.getEnemyField();
-}
-
-Model & Model::operator=(Model m)
-{
-	if (this != &m) {
-		for (int i = 0; i < 10; i++)
-			delete Field1[i];
-		delete[] Field1;
-		for (int i = 0; i < 10; i++)
-			delete Field2[i];
-		delete[] Field2;
-		Field1 =  new int*[10];
-		Field2 = new int*[10];
-		for (int i = 0; i < 10; i++) {
-			Field1[i] = new int;
-			Field2[i] = new int;
-		}
-		Field1 = getField();
-		Field2 = getEnemyField();
-	}
-	return (*this);
-}
-
 int Model::getGamer()
 {
 	return gamer;
@@ -117,6 +112,23 @@ void Model::setShips()
 {
 	if (gamer == 1) ship2--;
 	if (gamer == 2) ship1--;
+}
+
+void Model::setState(states s)
+{
+	state = s;
+}
+
+int Model::score()
+{
+	int** table = gamer == 1 ? Field1 : Field2;
+	int c = 0;
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+			c += table[i][j] == 3;
+	}
+	return c;
 }
 
 Model::Model()
@@ -136,12 +148,13 @@ Model::Model()
 	}
 }
 
+
 Model::~Model()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		delete Field1[i];
-		delete Field2[i];
+		delete [] Field1[i];
+		delete [] Field2[i];
 	}
 	delete[] Field1;
 	delete[] Field2;
@@ -151,24 +164,18 @@ void Model::setLine(int s_x, int s_y, int e_x, int e_y)
 {
 	if (s_x > e_x)
 		std::swap(s_x, e_x);
-	if (gamer == 1)
-	{
-		for (int i = s_x; i <= e_x; i++)
-			Field1[i][s_y] = SHIP;
+	int ** curField = gamer == 1 ? Field1 : Field2;
+	for (int i = s_x; i <= e_x; i++)
+		curField[i][s_y] = SHIP;
 
-		if (s_y > e_y)
-			std::swap(s_y, e_y);
-		for (int i = s_y; i <= e_y; i++)
-			Field1[s_x][i] = SHIP;
-	}
-	if (gamer == 2)
-	{
-		for (int i = s_x; i <= e_x; i++)
-			Field2[i][s_y] = SHIP;
+	if (s_y > e_y)
+		std::swap(s_y, e_y);
+	for (int i = s_y; i <= e_y; i++)
+		curField[s_x][i] = SHIP;
+}
 
-		if (s_y > e_y)
-			std::swap(s_y, e_y);
-		for (int i = s_y; i <= e_y; i++)
-			Field2[s_x][i] = SHIP;
-	}
+void Model::setPoint(int x, int y, int val) 
+{
+	int** field = gamer == 1 ? Field2 : Field1;
+	field[x][y] = val;
 }
